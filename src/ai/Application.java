@@ -16,7 +16,7 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 
-import ai.pages.HomePage;
+import ai.web.HomePage;
 
 public class Application extends WebApplication {
 

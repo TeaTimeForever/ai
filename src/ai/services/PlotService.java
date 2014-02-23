@@ -21,12 +21,13 @@ import com.googlecode.wickedcharts.highcharts.options.color.HexColor;
 import com.googlecode.wickedcharts.highcharts.options.color.RgbaColor;
 import com.googlecode.wickedcharts.highcharts.options.series.Point;
 import com.googlecode.wickedcharts.highcharts.options.series.PointSeries;
+import com.googlecode.wickedcharts.highcharts.options.series.Series;
 
 @Component
 public class PlotService {
 	
 	@Inject
-	private GenerationService generationService;
+	private GeneticalService generationService;
 	
 	private ChartOptions getChartOption(){
 		ChartOptions option = new ChartOptions();
@@ -52,12 +53,37 @@ public class PlotService {
 		for(Point p : points) {
 			pointSeries.addPoint(p);
 		}
-		
 		return pointSeries;
-		
 	}
 	
-	public Options getOptionsForLab1(int placesCount, int populationCount, int seed) {
+	public Series<Point> prepareCongestionPlacesSeries(){
+		return getPointSeries(
+				generationService.getCongestionPlaces())
+				.setMarker(new Marker()
+					.setSymbol(new Symbol(Symbol.PredefinedSymbol.CIRCLE))
+					.setRadius(1)
+		            .setFillColor(new RgbaColor(24, 90, 169, 0.5f))
+		            .setLineColor(new RgbaColor(24, 90, 169, 0.75f))
+		            .setLineWidth(1)
+		            .setColor(new RgbaColor(24, 90, 169, 1f))
+		            .setStates(new StatesChoice().setHover(new State().setEnabled(Boolean.FALSE))));
+	}
+	
+	public Series<Point> prepareChromosomeSeries(){
+		return getPointSeries(
+				generationService.getBestChromasome())
+				.setMarker(new Marker()
+					.setSymbol(new Symbol(Symbol.PredefinedSymbol.CIRCLE))
+					.setRadius(2)
+		            .setFillColor(new RgbaColor(238, 46, 47, 0.5f))
+		            .setLineColor(new RgbaColor(238, 46, 47, 0.75f))
+		            .setLineWidth(1)
+		            .setColor(new RgbaColor(238, 46, 47, 1f))
+		            .setStates(new StatesChoice().setHover(new State().setEnabled(Boolean.FALSE))));
+	}
+	
+	public Options initOptionsForLab1(int placesCount, int populationSize, int countOfPoints) {
+		generationService.init(placesCount);
 		Options options = new Options();
 		options.setTitle(new Title("Karina Pilyushonoka #1"));
 		options.setChartOptions(getChartOption());
@@ -82,30 +108,9 @@ public class PlotService {
 	        .setTickLength(3)
 	        .setTitle(new Title("X Axis")));
 		
-		options.addSeries(getPointSeries(
-				generationService.generateCongestionPlaces(placesCount))
-				.setMarker(new Marker()
-					.setSymbol(new Symbol(Symbol.PredefinedSymbol.CIRCLE))
-					.setRadius(1)
-		            .setFillColor(new RgbaColor(24, 90, 169, 0.5f))
-		            .setLineColor(new RgbaColor(24, 90, 169, 0.75f))
-		            .setLineWidth(1)
-		            .setColor(new RgbaColor(24, 90, 169, 1f))
-		            .setStates(new StatesChoice().setHover(new State().setEnabled(Boolean.FALSE)))));
-		
-		options.addSeries(getPointSeries(
-				generationService.initPopulation(populationCount, seed).get(0))
-				.setMarker(new Marker()
-					.setSymbol(new Symbol(Symbol.PredefinedSymbol.CIRCLE))
-					.setRadius(2)
-		            .setFillColor(new RgbaColor(238, 46, 47, 0.5f))
-		            .setLineColor(new RgbaColor(238, 46, 47, 0.75f))
-		            .setLineWidth(1)
-		            .setColor(new RgbaColor(238, 46, 47, 1f))
-		            .setStates(new StatesChoice().setHover(new State().setEnabled(Boolean.FALSE)))));
+		options.addSeries(prepareCongestionPlacesSeries());
+		options.addSeries(prepareChromosomeSeries());
 		
 		return options;
 	}
- 
-
-}
+} 
