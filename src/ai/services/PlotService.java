@@ -71,7 +71,7 @@ public class PlotService {
 	
 	public Series<Point> prepareChromosomeSeries(){
 		return getPointSeries(
-				generationService.getBestChromasome())
+				generationService.getBestChromosome())
 				.setMarker(new Marker()
 					.setSymbol(new Symbol(Symbol.PredefinedSymbol.CIRCLE))
 					.setRadius(2)

@@ -152,7 +152,7 @@ public class GeneticalService { // http://www.vosesoftware.com/ModelRiskHelp/
 		return min;
 	}
 	
-	public List<Point> getBestChromasome(){
+	public List<Point> getBestChromosome(){
 		List<Point> best = currentPopulation.get(0);
 		for(List<Point> chromosome : currentPopulation) {
 			if(fitness(chromosome) < fitness(best)) {

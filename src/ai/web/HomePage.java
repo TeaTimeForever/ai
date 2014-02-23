@@ -26,8 +26,9 @@ public class HomePage extends WebPage {
 	
 	public HomePage() throws Exception {
 		options = new Model<Options>(plotService.initOptionsForLab1(500, geneticalService.POPULATION_SIZE, geneticalService.GEN_COUNT));
+		bestFitness = new Model<Integer>(geneticalService.fitness(geneticalService.getBestChromosome()));
+		
 		add(new ChartContainer("chartContainer", options));
-		bestFitness = new Model<Integer>(geneticalService.fitness(geneticalService.getBestChromasome()));
 		add(new Label("fitness", bestFitness));
 		add(new NextStepsLink("nextStep", 1));
 		add(new NextStepsLink("next100Step", 100));
@@ -53,9 +54,8 @@ public class HomePage extends WebPage {
 			newOptions.addSeries(plotService.prepareChromosomeSeries());
 			
 			options.setObject(newOptions);
-			bestFitness.setObject(geneticalService.fitness(geneticalService.getBestChromasome()));
+			bestFitness.setObject(geneticalService.fitness(geneticalService.getBestChromosome()));
 			target.add(HomePage.this);
 		}
 	}
-	
 }
