@@ -85,6 +85,18 @@ public class PlotService {
 		            .setStates(new StatesChoice().setHover(new State().setEnabled(Boolean.FALSE))));
 	}
 	
+	public Series<Point> preparePoints(){
+		return getPointSeries(neuralService.getPoints())
+				.setMarker(new Marker()
+					.setSymbol(new Symbol(Symbol.PredefinedSymbol.CIRCLE))
+					.setRadius(1)
+		            .setFillColor(new RgbaColor(24, 90, 169, 0.5f))
+		            .setLineColor(new RgbaColor(24, 90, 169, 0.75f))
+		            .setLineWidth(1)
+		            .setColor(new RgbaColor(24, 90, 169, 1f))
+		            .setStates(new StatesChoice().setHover(new State().setEnabled(Boolean.FALSE))));
+	}
+	
 	public Options initOptionsForLab1() {
 		generationService.init();
 		Options options = new Options();
@@ -143,9 +155,7 @@ public class PlotService {
 	        .setTickLength(3)
 	        .setTitle(new Title("X Axis")));
 		
-		options.addSeries(prepareCongestionPlacesSeries());
-		options.addSeries(prepareChromosomeSeries());
-		
+		options.addSeries(preparePoints());
 		return options;
 	}
 } 

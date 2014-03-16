@@ -2,13 +2,10 @@ package ai.web;
 
 import javax.inject.Inject;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 
-import ai.services.GeneticalService;
+import ai.services.NeuralNetworkService;
 import ai.services.PlotService;
 import ai.web.panels.ChartContainer;
 
@@ -20,12 +17,12 @@ public class Lab2 extends WebPage {
 	private PlotService plotService;
 	
 	@Inject
-	private GeneticalService geneticalService;
+	private NeuralNetworkService neuralService;
 	private Model<Options> options;
 	
 	public Lab2() throws Exception {
-//		options = new Model<Options>(plotService.);
-		
+		options = new Model<Options>(plotService.initOptionsForLab2());
 		add(new ChartContainer("chartContainer", options));
+		
 	}
 }
