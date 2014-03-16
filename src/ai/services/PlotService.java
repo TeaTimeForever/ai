@@ -29,6 +29,9 @@ public class PlotService {
 	@Inject
 	private GeneticalService generationService;
 	
+	@Inject
+	private NeuralNetworkService neuralService;
+	
 	private ChartOptions getChartOption(){
 		ChartOptions option = new ChartOptions();
 		option
@@ -82,8 +85,40 @@ public class PlotService {
 		            .setStates(new StatesChoice().setHover(new State().setEnabled(Boolean.FALSE))));
 	}
 	
-	public Options initOptionsForLab1(int placesCount, int populationSize, int countOfPoints) {
-		generationService.init(placesCount);
+	public Options initOptionsForLab1() {
+		generationService.init();
+		Options options = new Options();
+		options.setTitle(new Title("Karina Pilyushonoka #1"));
+		options.setChartOptions(getChartOption());
+		options.setPlotOptions(getPlotOptionChoice());
+		
+		options.setyAxis(new Axis()
+        	.setLineColor(HexColor.fromString("#999999"))
+        	.setLineWidth(1)
+        	.setTickColor(HexColor.fromString("#666666"))
+        	.setTickLength(3)
+        	.setGridLineColor(HexColor.fromString("#dddddd"))
+        	.setTitle(new Title("Y Axis")
+            .setRotation(0)
+            .setMargin(50)));
+		
+		options.setxAxis(new Axis()
+	        .setMinPadding(0.75f)
+	        .setMaxPadding(0.75f)
+	        .setLineColor(HexColor.fromString("#999999"))
+	        .setLineWidth(1)
+	        .setTickColor(HexColor.fromString("#666666"))
+	        .setTickLength(3)
+	        .setTitle(new Title("X Axis")));
+		
+		options.addSeries(prepareCongestionPlacesSeries());
+		options.addSeries(prepareChromosomeSeries());
+		
+		return options;
+	}
+	
+	public Options initOptionsForLab2() {
+		neuralService.init();
 		Options options = new Options();
 		options.setTitle(new Title("Karina Pilyushonoka #1"));
 		options.setChartOptions(getChartOption());

@@ -16,7 +16,7 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 
-import ai.web.HomePage;
+import ai.web.Lab2;
 
 public class Application extends WebApplication {
 
@@ -27,7 +27,7 @@ public class Application extends WebApplication {
 	 */
 	@Override
 	public Class<? extends Page> getHomePage() {
-		return HomePage.class;
+		return Lab2.class;
 	}
 
 	/*

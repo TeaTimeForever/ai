@@ -25,14 +25,15 @@ public class HomePage extends WebPage {
 	private Model<Integer> bestFitness;
 	
 	public HomePage() throws Exception {
-		options = new Model<Options>(plotService.initOptionsForLab1(500, geneticalService.POPULATION_SIZE, geneticalService.GEN_COUNT));
+		options = new Model<Options>(plotService.initOptionsForLab1());
 		bestFitness = new Model<Integer>(geneticalService.fitness(geneticalService.getBestChromosome()));
 		
 		add(new ChartContainer("chartContainer", options));
 		add(new Label("fitness", bestFitness));
 		add(new NextStepsLink("nextStep", 1));
 		add(new NextStepsLink("next100Step", 100));
-			
+		add(new NextStepsLink("next1000Step", 1000));
+		add(new NextStepsLink("next10000Step", 10000));
 	}
 	
 	private class NextStepsLink extends AjaxLink<String> {
@@ -47,6 +48,7 @@ public class HomePage extends WebPage {
 		public void onClick(AjaxRequestTarget target) {
 			for(int i = 0; i < stepsCount; i++) {
 				geneticalService.getNewPopulation();
+				System.out.println(i*100/stepsCount);
 			}
 			Options newOptions = options.getObject();
 			newOptions.clearSeries();

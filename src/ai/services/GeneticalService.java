@@ -13,15 +13,17 @@ import org.springframework.stereotype.Component;
 import com.googlecode.wickedcharts.highcharts.options.series.Point;
 
 @Component
-public class GeneticalService { // http://www.vosesoftware.com/ModelRiskHelp/
+public class GeneticalService {
 
 	private Random random;
 	private List<Point> congestionPlaces;
 	private List<List<Point>> currentPopulation;
 	
-	public final int MAX_MUTATIONS_COUNT_PER_ITERATION = 5;
-	public final int POPULATION_SIZE = 50;
+	public final int CONGESTION_POINTS_COUNT = 500;
 	public final int GEN_COUNT = 5;
+	public final int POPULATION_SIZE = 50;
+	public final int MAX_MUTATIONS_COUNT_PER_ITERATION = 1;
+	public final int MAX_CROSSOVER_COUNT_PER_ITERATION = POPULATION_SIZE * 70 / 100;
 	
 	public List<Point> getCongestionPlaces(){
 		return congestionPlaces;
@@ -31,24 +33,24 @@ public class GeneticalService { // http://www.vosesoftware.com/ModelRiskHelp/
 		return currentPopulation;
 	}
 	
-	private List<Point> initCongestionPlaces(int count){
+	private List<Point> initCongestionPlaces(){
 		Gamma g = new Gamma(7, 15);
 		Normal n = new Normal(10, 10);
 		Uniform u = new Uniform(0, 500);
 		
 		List<Point> points = new ArrayList<Point>();
-		for(int i=0; i<count/2; i++) {
+		for(int i=0; i<CONGESTION_POINTS_COUNT/2; i++) {
 			points.add(new Point(g.random(), u.random()));
 		}
-		for(int i=0; i<count/2; i++) {
+		for(int i=0; i<CONGESTION_POINTS_COUNT/2; i++) {
 			points.add(new Point(n.random(), u.random()));
 		}
 		return points;
 	}
 	
-	public void init(int count){
+	public void init(){
 		random = new Random();
-		congestionPlaces = initCongestionPlaces(count);
+		congestionPlaces = initCongestionPlaces();
 		currentPopulation = initPopulation(POPULATION_SIZE, GEN_COUNT);
 	}
 	
@@ -73,27 +75,6 @@ public class GeneticalService { // http://www.vosesoftware.com/ModelRiskHelp/
 	}
 	
 	/**
-	 * increase chromosomes count
-	 * @param population - current population
-	 * @return increase count of chromosomes
-	 */
-	private List<List<Point>> crossover(List<List<Point>> population){
-		List<List<Point>> modified = new ArrayList<List<Point>>();
-		for(int i=0; i<population.size()-1; i++) {
-			List<Point> chromosome1 = population.get(i);
-			List<Point> chromosome2 = population.get(i+1);
-			List<Point> child = new ArrayList<Point>();
-			
-			for(int j=0; j < chromosome1.size(); j++){
-				child.add(new Point(chromosome1.get(j).getX(), chromosome2.get(j).getY()));
-			}
-			modified.add(child);
-		}
-		modified.addAll(population);
-		return modified;
-	}
-	
-	/**
 	 * create randomize mutations (from 0 to 5)
 	 * @param population
 	 * @return changed population
@@ -106,6 +87,29 @@ public class GeneticalService { // http://www.vosesoftware.com/ModelRiskHelp/
 			population.set(randomCh, randomChromosome);
 		}
 		return population;
+	}
+	
+	/**
+	 * increase chromosomes count
+	 * @param population - current population
+	 * @return increase count of chromosomes
+	 */
+	private List<List<Point>> crossover(List<List<Point>> population){
+		List<List<Point>> modified = new ArrayList<List<Point>>();
+		for(int i=0; i < getRandomIndex(MAX_CROSSOVER_COUNT_PER_ITERATION); i++) {
+			int randomCh1 = getRandomIndex(population.size()-1);
+			int randomCh2 = getRandomIndex(population.size()-1);
+			List<Point> chromosome1 = population.get(randomCh1);
+			List<Point> chromosome2 = population.get(randomCh2);
+			List<Point> child = new ArrayList<Point>();
+			
+			for(int j=0; j < chromosome1.size(); j++){
+				child.add(new Point(chromosome1.get(j).getX(), chromosome2.get(j).getY()));
+			}
+			modified.add(child);
+		}
+		modified.addAll(population);
+		return modified;
 	}
 	
 	private Point getNewPoint(){
